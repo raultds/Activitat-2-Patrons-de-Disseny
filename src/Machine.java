@@ -24,6 +24,6 @@ public class Machine extends MachineComponent {
 
     private void notifyBroken(){
         setChanged();
-        notifyObservers(broken);
+        notifyObservers(this);
     }
 }
