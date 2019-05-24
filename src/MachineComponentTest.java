@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class MachineComponentTest {
     private MachineComposite mc;
+    private MachineComposite mc1;
     private Machine m1;
     private Machine m2;
     private Machine m3;
@@ -12,6 +13,7 @@ public class MachineComponentTest {
     @BeforeEach
     void init(){
         mc = new MachineComposite();
+        mc1 = new MachineComposite();
         m1 = new Machine();
         m2 = new Machine();
         m3 = new Machine();
@@ -50,18 +52,59 @@ public class MachineComponentTest {
     }
 
     @Test
-    void addBrokenComponentTest(){
-        assertEquals(mc.isBroken(), false);
+    void addBrokenComponentAndRepairTes(){
         m1.setBroken();
         mc.addComponent(m1);
+        assertEquals(mc.isBroken(), true);
+        m1.repair();
+        assertEquals(mc.isBroken(), false);
+    }
+
+    @Test
+    void notAllRepairedTest(){
+        mc.addComponent(mc1);
+        mc.addComponent(m1);
+        mc.addComponent(m2);
+        m1.setBroken();
+        m2.setBroken();
+        m1.repair();
         assertEquals(mc.isBroken(), true);
     }
 
     @Test
-    void addBrokenComponentAndRepairTest(){
-        m1.setBroken();
+    void addBrokenExpandsTest(){
+        mc.addComponent(mc1);
         mc.addComponent(m1);
-        m1.repair();
+        mc.addComponent(m2);
+        mc1.addComponent(m3);
+        m4.setBroken();
+        mc1.addComponent(m4);
+        assertEquals(mc1.isBroken(), true);
+        assertEquals(mc.isBroken(), true);
+    }
+
+    @Test
+    void brokenExpandsTest(){
+        mc.addComponent(mc1);
+        mc.addComponent(m1);
+        mc.addComponent(m2);
+        mc1.addComponent(m3);
+        mc1.addComponent(m4);
+        m4.setBroken();
+        assertEquals(mc1.isBroken(), true);
+        assertEquals(mc.isBroken(), true);
+    }
+
+    @Test
+    void repairExpandsTest(){
+        mc.addComponent(mc1);
+        mc.addComponent(m1);
+        mc.addComponent(m2);
+        mc1.addComponent(m3);
+        m4.setBroken();
+        mc1.addComponent(m4);
+        m4.repair();
+        assertEquals(mc1.isBroken(), false);
         assertEquals(mc.isBroken(), false);
     }
 
